@@ -18,8 +18,33 @@
       this.$element = $(element);
 
 
-      this.params = {date: true, time: true, format: 'YYYY-MM-DD', minDate: null, maxDate: null, currentDate: null, lang: 'en', weekStart: 0, disabledDays: [], shortTime: false, clearButton: false, nowButton: false, cancelText: 'Cancel', okText: 'OK', clearText: 'Clear', nowText: 'Now', switchOnClick: false, triggerEvent: 'focus', monthPicker: false, year:true};
-      this.params = $.fn.extend(this.params, options);
+	  this.params = {
+		 date: true,
+		 time: true,
+		 format: 'YYYY-MM-DD',
+		 minDate: null,
+		 maxDate: null,
+		 currentDate: null,
+		 lang: 'en',
+		 weekStart: 0,
+		 disabledDays: [],
+		 shortTime: false,
+		 clearButton: false,
+		 nowButton: false,
+		 cancelText: 'Cancel',
+		 okText: 'OK',
+		 clearText: 'Clear',
+		 nowText: 'Now',
+		 switchOnClick: false,
+		 triggerEvent: 'focus',
+		 monthPicker: false,
+		 year:true,
+		 startTime: 0,
+		 endTime: 12,
+		 minutesSelect:5,
+
+	 };
+	  this.params = $.fn.extend(this.params, options);
 
       this.name = "dtp_" + this.setName();
       this.$element.attr("data-dtp", this.name);
@@ -218,27 +243,27 @@
                          '<div class="dtp-date-view">' +
                          '<header class="dtp-header">' +
                          '<div class="dtp-actual-day">Lundi</div>' +
-                         '<div class="dtp-close"><a href="javascript:void(0);"><i class="material-icons">clear</i></a></div>' +
+                         '<div class="dtp-close"><a href="javascript:void(0);"><i class="fas fa-times"></i></a></div>' +
                          '</header>' +
                          '<div class="dtp-date hidden">' +
                          '<div>' +
                          '<div class="left center p10">' +
-                         '<a href="javascript:void(0);" class="dtp-select-month-before"><i class="material-icons">chevron_left</i></a>' +
+                         '<a href="javascript:void(0);" class="dtp-select-month-before"><i class="fas fa-chevron-left"></i></a>' +
                          '</div>' +
                          '<div class="dtp-actual-month p80">MAR</div>' +
                          '<div class="right center p10">' +
-                         '<a href="javascript:void(0);" class="dtp-select-month-after"><i class="material-icons">chevron_right</i></a>' +
+                         '<a href="javascript:void(0);" class="dtp-select-month-after"><i class="fas fa-chevron-right"></i></a>' +
                          '</div>' +
                          '<div class="clearfix"></div>' +
                          '</div>' +
                          '<div class="dtp-actual-num">13</div>' +
                          '<div>' +
                          '<div class="left center p10">' +
-                         '<a href="javascript:void(0);" class="dtp-select-year-before"><i class="material-icons">chevron_left</i></a>' +
+                         '<a href="javascript:void(0);" class="dtp-select-year-before"><i class="fas fa-chevron-left"></i></a>' +
                          '</div>' +
                          '<div class="dtp-actual-year p80'+(this.params.year?"":" disabled")+'">2014</div>' +
                          '<div class="right center p10">' +
-                         '<a href="javascript:void(0);" class="dtp-select-year-after"><i class="material-icons">chevron_right</i></a>' +
+                         '<a href="javascript:void(0);" class="dtp-select-year-after"><i class="fas fa-chevron-right"></i></a>' +
                          '</div>' +
                          '<div class="clearfix"></div>' +
                          '</div>' +
@@ -373,10 +398,13 @@
                  this.$dtpElement.find('.dtp-picker-year').addClass('hidden');
 
                  var svgClockElement = this.createSVGClock(true);
+				 var startTime = this.params.startTime;
+				 var endTime = this.params.endTime;
+				 var circleTime = endTime - startTime;
 
-                 for (var i = 0; i < 12; i++)
+                 for (var i = startTime; i < 12; i++)
                  {
-                    var x = -(162 * (Math.sin(-Math.PI * 2 * (i / 12))));
+                 	var x = -(162 * (Math.sin(-Math.PI * 2 * (i / 12))));
                     var y = -(162 * (Math.cos(-Math.PI * 2 * (i / 12))));
 
                     var fill = ((this.currentDate.format(hFormat) == i) ? "#8BC34A" : 'transparent');
@@ -404,9 +432,14 @@
 
                  if (!this.params.shortTime)
                  {
-                    for (var i = 0; i < 12; i++)
-                    {
-                       var x = -(110 * (Math.sin(-Math.PI * 2 * (i / 12))));
+					 var newEndTime = endTime - 12;
+					 if (newEndTime == 0) {
+						 newEndTime = 12;
+					 }
+
+					 for (var i = 0; i < newEndTime; i++)
+					 {
+						 var x = -(110 * (Math.sin(-Math.PI * 2 * (i / 12))));
                        var y = -(110 * (Math.cos(-Math.PI * 2 * (i / 12))));
 
                        var fill = ((this.currentDate.format(hFormat) == (i + 12)) ? "#8BC34A" : 'transparent');
@@ -459,33 +492,35 @@
                  this.$dtpElement.find('.dtp-picker-datetime').removeClass('hidden');
 
                  var svgClockElement = this.createSVGClock(false);
-
+				 var minutesSelect = this.params.minutesSelect;
                  for (var i = 0; i < 60; i++)
                  {
-                    var s = ((i % 5 === 0) ? 162 : 158);
-                    var r = ((i % 5 === 0) ? 30 : 20);
+					 if ((i % minutesSelect) === 0)
+					 {
+                    	var s = ((i % minutesSelect === 0) ? 162 : 158);
+                    	var r = ((i % minutesSelect === 0) ? 30 : 20);
 
-                    var x = -(s * (Math.sin(-Math.PI * 2 * (i / 60))));
-                    var y = -(s * (Math.cos(-Math.PI * 2 * (i / 60))));
+                    	var x = -(s * (Math.sin(-Math.PI * 2 * (i / 60))));
+                    	var y = -(s * (Math.cos(-Math.PI * 2 * (i / 60))));
 
-                    var color = ((this.currentDate.format("m") == i) ? "#8BC34A" : 'transparent');
+                    	var color = ((this.currentDate.format("m") == i) ? "#8BC34A" : 'transparent');
 
-                    var svgMinuteCircle = this.createSVGElement("circle", {'id': 'm-' + i, 'class': 'dtp-select-minute', 'style': 'cursor:pointer', r: r, cx: x, cy: y, fill: color, 'data-minute': i});
+                    	var svgMinuteCircle = this.createSVGElement("circle", {'id': 'm-' + i, 'class': 'dtp-select-minute', 'style': 'cursor:pointer', r: r, cx: x, cy: y, fill: color, 'data-minute': i});
 
-                    if (!this.toggleTime(i, false))
-                    {
-                       svgMinuteCircle.className += " disabled";
-                    } else
-                    {
-                       svgMinuteCircle.addEventListener('click', this._onSelectMinute.bind(this));
-                    }
+                    	if (!this.toggleTime(i, false)) {
+							svgMinuteCircle.className += " disabled";
+                    	}
+						else {
+							svgMinuteCircle.addEventListener('click', this._onSelectMinute.bind(this));
+						}
 
-                    svgClockElement.appendChild(svgMinuteCircle)
+						svgClockElement.appendChild(svgMinuteCircle)
+					}
                  }
 
                  for (var i = 0; i < 60; i++)
                  {
-                    if ((i % 5) === 0)
+                    if ((i % minutesSelect) === 0)
                     {
                        var x = -(162 * (Math.sin(-Math.PI * 2 * (i / 60))));
                        var y = -(162 * (Math.cos(-Math.PI * 2 * (i / 60))));
