@@ -25,7 +25,7 @@
 		 minDate: null,
 		 maxDate: null,
 		 currentDate: null,
-		 lang: 'en',
+		 lang: 'nl',
 		 weekStart: 0,
 		 disabledDays: [],
 		 shortTime: false,
