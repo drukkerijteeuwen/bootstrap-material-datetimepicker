@@ -55,14 +55,17 @@ a:focus .material-icons {
 .btn:not(.btn-raised),
 .input-group-btn .btn:not(.btn-raised),
 .btn:not(.btn-raised).btn-default,
-.input-group-btn .btn:not(.btn-raised).btn-default {
-  color: rgba(0,0,0, 0.87);
+.input-group-btn .btn:not(.btn-raised).btn-default,
+button.dtp-btn-cancel, button.dtp-btn-ok {
+  color: rgba(0,0,0, 0.87) !important;
 }
 
 .btn-group-sm .btn, .btn-group-sm .input-group-btn .btn, .btn.btn-sm, .input-group-btn .btn.btn-sm {
     padding: 5px 20px;
     font-size: 12px;
 }
+
+
 
 .dtp {
 	position: fixed;
